@@ -2,7 +2,7 @@
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
-
+using UnityEditor;
 public class C2TDemo : MonoBehaviour 
 {
 	public TextAsset csv;
