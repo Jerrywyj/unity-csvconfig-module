@@ -8,7 +8,7 @@ public class CSVView : EditorWindow
 	TextAsset csv = null;
 	string[][] arr = null;
 
-	[MenuItem("Window/CSV View")]
+	[MenuItem(CsvConfigUtility.Menu_CsvView)]
 	public static void ShowWindow()
 	{
 		//Show existing window instance. If one doesn't exist, make one.
@@ -21,7 +21,9 @@ public class CSVView : EditorWindow
 		if(newCsv != csv)
 		{
 			csv = newCsv;
-			arr = ParserCSV.Parse(csv.text);
+            var path = AssetDatabase.GetAssetPath(newCsv);
+            var text = System.IO.File.ReadAllText(path, System.Text.Encoding.GetEncoding("gb2312"));
+            arr = ParserCSV.Parse(text);
 		}
 		if(GUILayout.Button("Refresh") && csv != null)
 			arr = ParserCSV.Parse(csv.text);

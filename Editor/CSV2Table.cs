@@ -11,10 +11,10 @@ public class CSV2Table : EditorWindow
 	MonoScript script = null;
 	bool foldout = true;
 
-	[MenuItem("Window/CSV to Table")]
+	[MenuItem(CsvConfigUtility.Menu_Csv2Table)]
 	public static void ShowWindow()
 	{
-		EditorWindow.GetWindow(typeof(CSV2Table));
+		GetWindow(typeof(CSV2Table));
 	}
 
 	void OnGUI()
@@ -25,10 +25,14 @@ public class CSV2Table : EditorWindow
 		{
 			csv = newCsv;
 			if(csv != null)
-				arr = ParserCSV.Parse(csv.text);
-			else
-				arr = null;
-		}
+            {
+                arr = ParserCSV.Parse(csv.text);
+            }
+            else
+            {
+                arr = null;
+            }
+        }
 
 		// Script
 		script = EditorGUILayout.ObjectField("Script", script, typeof(MonoScript), false) as MonoScript;

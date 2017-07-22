@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 using System;
 public class Csv2AssetWindow : EditorWindow
 {
-    [MenuItem("Window/Csv2Asset")]
+    [MenuItem(CsvConfigUtility.Menu_Csv2Asset)]
     static void CreateCsv2AssetWindow()
     {
         EditorWindow window = GetWindow<Csv2AssetWindow>();
@@ -22,7 +22,7 @@ public class Csv2AssetWindow : EditorWindow
     private string[][] arr = null;
     Vector2 pos;
     ScriptableObject obj;
-    private string[] keys;
+    //private string[] keys;
 
     private void OnEnable()
     {
@@ -93,14 +93,14 @@ public class Csv2AssetWindow : EditorWindow
     {
         using (var hor = new EditorGUILayout.HorizontalScope())
         {
-            if (keys != null)
-            {
-                for (int i = 0; i < keys.Length; i++)
-                {
-                    EditorGUILayout.LabelField(keys[i]);
+            //if (keys != null)
+            //{
+            //    for (int i = 0; i < keys.Length; i++)
+            //    {
+            //        EditorGUILayout.LabelField(keys[i]);
 
-                }
-            }
+            //    }
+            //}
         }
     }
 
@@ -168,7 +168,7 @@ public class Csv2AssetWindow : EditorWindow
             {
                 if (!string.IsNullOrEmpty(_path))
                 {
-                    string text = System.IO.File.ReadAllText(_path);
+                    string text = System.IO.File.ReadAllText(_path,System.Text.Encoding.GetEncoding("gb2312"));
                     if (!string.IsNullOrEmpty(text))
                     {
                         arr = ParserCSV.Parse(text);
@@ -181,7 +181,7 @@ public class Csv2AssetWindow : EditorWindow
             }
             if (GUILayout.Button("-->Asset", GUILayout.Height(50)))
             {
-                Type objType = obj.GetType();
+                //Type objType = obj.GetType();
                 Type listType = fielditem.FieldType;
 
                 Type type = listType.GetMethod("Find").ReturnType;

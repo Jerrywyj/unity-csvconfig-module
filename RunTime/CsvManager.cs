@@ -7,10 +7,33 @@ using System.IO;
 /// <summary>
 /// 读取sqlite中的数据并加载到属性
 /// </summary>
-public class CsvManager : AssistManager<CsvManager>
+public class CsvManager:MonoBehaviour
 {
+    private static CsvManager instance = default(CsvManager);
+    private static object lockHelper = new object();
+    public static bool mManualReset = false;
+
+    protected CsvManager() { }
+    public static CsvManager Instance
+    {
+        get
+        {
+            if (instance == null)
+            {
+                lock (lockHelper)
+                {
+                    if (instance == null)
+                    {
+                        GameObject go = new GameObject(typeof(CsvManager).ToString());
+                        instance = go.AddComponent<CsvManager>();
+                    }
+                }
+            }
+            return instance;
+        }
+    }
+
     public static string FilesPath { get { return Application.streamingAssetsPath + "/CSV/"; } }
-    public const string settingTable = "SettingTable.csv";
     public static Dictionary<string, CsvTable> loadedTables = new Dictionary<string, CsvTable>();
 
     #region Core
@@ -28,18 +51,6 @@ public class CsvManager : AssistManager<CsvManager>
             table.Load(csvText);
             loadedTables.Add(fileName, table);
             return (T)table;
-            //try
-            //{
-            //    CsvTable table = Activator.CreateInstance<T>();
-            //    table.Load(csvText);
-            //    loadedTables.Add(fileName, table);
-            //    return (T)table;
-            //}
-            //catch (System.Exception ex)
-            //{
-            //    Debug.LogError("转换失败" + ex);
-            //    return null;
-            //}
         }
         else
         {
