@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 using System;
 public class Csv2AssetWindow : EditorWindow
 {
-    [MenuItem(CsvConfigUtility.Menu_Csv2Asset)]
+    [MenuItem("Window/CsvConfig/Csv2Asset")]
     static void CreateCsv2AssetWindow()
     {
         EditorWindow window = GetWindow<Csv2AssetWindow>();
