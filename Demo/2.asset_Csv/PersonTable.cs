@@ -5,73 +5,55 @@ using System.Collections.Generic;
 
 public class PersonTable : CsvTable
 {
-	public class Row
-	{
-		public string name{get;set;}
-		public string sex{get;set;}
-
-	}
-
-	List<Row> rowList = new List<Row>();
-
-	public List<Row> GetRowList()
-	{
-		return rowList;
-	}
-
-	public override void Load(string csvData)
-	{
-		rowList.Clear();
-		string[][] grid = ParserCSV.Parse(csvData);
-		for(int i = 1 ; i < grid.Length ; i++)
-		{
-			Row row = new Row();
-			row.name = grid[i][0];
-			row.sex = grid[i][1];
-
-			rowList.Add(row);
-		}
-		isLoaded = true;
-	}
+    public class Row
+    {
+        public string name { get; set; }
+        public string sex { get; set; }
+    }
+    List<Row> rowList = new List<Row>();
+    public Row this[int index]
+    {
+        get
+        {
+            if (rowList.Count > index && index >= 0)
+            {
+                return rowList[index];
+            }
+            else
+            {
+                return null;
+            }
+        }
+    }
+    public List<Row> RowList
+    {
+        get
+        {
+            return rowList;
+        }
+    }
+    public override void Load(string csvData)
+    {
+        rowList.Clear();
+        grid = ParserCSV.Parse(csvData);
+        for (int i = 1; i < grid.Length; i++)
+        {
+            Row row = new Row();
+            row.name = grid[i][0];
+            row.sex = grid[i][1];
+            rowList.Add(row);
+        }
+        isLoaded = true;
+    }
     public override string UnLoad()
     {
         for (int i = 1; i < rowList.Count; i++)
         {
-            Row row = rowList[i-1];
-			grid[i][0] = row.name;
-			grid[i][1] = row.sex;
+            Row row = rowList[i - 1];
+            grid[i][0] = row.name;
+            grid[i][1] = row.sex;
 
         }
-       return UParserCSV.UParser(grid);
+        return UParserCSV.UParser(grid);
     }
-
-	public int NumRows()
-	{
-		return rowList.Count;
-	}
-
-	public Row GetAt(int i)
-	{
-		if(rowList.Count <= i)
-			return null;
-		return rowList[i];
-	}
-
-	public Row Find_name(string find)
-	{
-		return rowList.Find(x => x.name == find);
-	}
-	public List<Row> FindAll_name(string find)
-	{
-		return rowList.FindAll(x => x.name == find);
-	}
-	public Row Find_sex(string find)
-	{
-		return rowList.Find(x => x.sex == find);
-	}
-	public List<Row> FindAll_sex(string find)
-	{
-		return rowList.FindAll(x => x.sex == find);
-	}
-
 }

@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 using System;
 public class Csv2AssetWindow : EditorWindow
 {
-    [MenuItem("Window/CsvConfig/Csv2Asset")]
+    [MenuItem("Window/Csv2Asset")]
     static void CreateCsv2AssetWindow()
     {
         EditorWindow window = GetWindow<Csv2AssetWindow>();
@@ -22,19 +22,19 @@ public class Csv2AssetWindow : EditorWindow
     private string[][] arr = null;
     Vector2 pos;
     ScriptableObject obj;
-    //private string[] keys;
-
+    SerializedProperty script;
     private void OnEnable()
     {
-
+        var windowObj = new SerializedObject(this);
+        script = windowObj.FindProperty("m_Script");
     }
 
-    void ResetEnum(ScriptableObject obj)
+    void ResetEnum(ScriptableObject arg)
     {
-        if (obj != null)
+        if (arg != null)
         {
             selectingFiled = new List<FieldInfo>();
-            RetriveArray(obj.GetType(), selectingFiled);
+            RetriveArray(arg.GetType(), selectingFiled);
             selectTog = new bool[selectingFiled.Count];
 
             for (int i = 0; i < selectTog.Length; i++)
@@ -83,6 +83,7 @@ public class Csv2AssetWindow : EditorWindow
 
     private void OnGUI()
     {
+        EditorGUILayout.PropertyField(script);
         DocAndAsset();
         FunctionButtons();
         TryDrawKeys();
@@ -91,17 +92,17 @@ public class Csv2AssetWindow : EditorWindow
 
     private void TryDrawKeys()
     {
-        using (var hor = new EditorGUILayout.HorizontalScope())
-        {
-            //if (keys != null)
-            //{
-            //    for (int i = 0; i < keys.Length; i++)
-            //    {
-            //        EditorGUILayout.LabelField(keys[i]);
+        //using (var hor = new EditorGUILayout.HorizontalScope())
+        //{
+        //    if (keys != null)
+        //    {
+        //        for (int i = 0; i < keys.Length; i++)
+        //        {
+        //            EditorGUILayout.LabelField(keys[i]);
 
-            //    }
-            //}
-        }
+        //        }
+        //    }
+        //}
     }
 
     void DocAndAsset()
@@ -160,28 +161,27 @@ public class Csv2AssetWindow : EditorWindow
     {
         using (var hor = new EditorGUILayout.HorizontalScope())
         {
-            if (GUILayout.Button("CSV<--", GUILayout.Height(50)))
+            if (GUILayout.Button("CSV<--"))
             {
 
             }
-            if (GUILayout.Button("加载CSV", GUILayout.Height(50)))
+            if (GUILayout.Button("加载CSV"))
             {
                 if (!string.IsNullOrEmpty(_path))
                 {
-                    string text = System.IO.File.ReadAllText(_path,System.Text.Encoding.GetEncoding("gb2312"));
+                    string text = System.IO.File.ReadAllText(_path);
                     if (!string.IsNullOrEmpty(text))
                     {
                         arr = ParserCSV.Parse(text);
                     }
                 }
             }
-            if (GUILayout.Button("加载Asset", GUILayout.Height(50)))
+            if (GUILayout.Button("加载Asset"))
             {
 
             }
-            if (GUILayout.Button("-->Asset", GUILayout.Height(50)))
+            if (GUILayout.Button("-->Asset"))
             {
-                //Type objType = obj.GetType();
                 Type listType = fielditem.FieldType;
 
                 Type type = listType.GetMethod("Find").ReturnType;
@@ -191,8 +191,8 @@ public class Csv2AssetWindow : EditorWindow
                 {
                     Debug.Log(fields[i]);
                 }
-
-                fielditem.FieldType.GetMethod("Clear").Invoke(fielditem.GetValue(obj),null);
+                //fielditem.FieldType.GetMethod("Clear").Invoke(fielditem.GetValue(obj),null);
+                fielditem.SetValue(obj,Activator.CreateInstance(fielditem.FieldType));
                 for (int i = 0; i < arr.Length; i++)
                 {
                     var instance1 = Activator.CreateInstance(type);

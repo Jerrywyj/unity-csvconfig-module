@@ -41,7 +41,6 @@ public class CsvManager:MonoBehaviour
     /// 加载配置文件
     /// </summary>
     /// <param name="fileName">配置文件名, CSV文件</param>
-    /// <param name="index">表示从第index行开始读取文件, 从0开始</param>
     public static T LoadConfig<T>(string fileName) where T : CsvTable
     {
         if (!loadedTables.ContainsKey(fileName))
@@ -61,10 +60,8 @@ public class CsvManager:MonoBehaviour
     /// <summary>
     /// 将数据保存到配制表
     /// </summary>
-    /// <typeparam name="T"></typeparam>
     /// <param name="tableName"></param>
-    /// <param name="index"></param>
-    /// <param name="objs"></param>
+    /// <param name="table"></param>
     public static void SaveConfig(string tableName, CsvTable table)
     {
         string csvData = table.UnLoad();
