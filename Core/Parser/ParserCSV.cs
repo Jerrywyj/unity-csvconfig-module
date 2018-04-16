@@ -14,12 +14,15 @@ public static class ParserCSV {
         string next;
         while ((next = reader.ReadLine()) != null)
         {
-            foreach (char ch in next)
+            for (int i = 0; i < next.Length; i++)
             {
+                var ch = next[i];
                 switch (ch)
                 {
                     case ParserStateMachine.CommaCharacter:
-                        machine.Comma();
+                        if(i != next.Length - 1){//忽略最后一个逗号
+                            machine.Comma();
+                        }
                         break;
                     case ParserStateMachine.QuoteCharacter:
                         machine.Quote();
@@ -28,7 +31,6 @@ public static class ParserCSV {
                         machine.AnyChar(ch);
                         break;
                 }
-                
             }
             machine.EndOfLine();
         }
